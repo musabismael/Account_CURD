@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { sequelize, testDatabaseConnection } = require("./database");
 const Account = require("./models/account");
 const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt');
 
 const app = express();
 const port = 3000; // Change the port if desired
@@ -16,11 +17,12 @@ testDatabaseConnection();
 
 const transporter = nodemailer.createTransport({
     // Add your email service provider configuration here
-    service: 'hotmail',
+    host: 'smtp.ethereal.email',
+    port: 587,
     auth: {
-      user: 'musabdevs99@outlook.com',
-      pass: 'musabdevs@1994',
-    },
+        user: 'lorenza8@ethereal.email',
+        pass: 'H99KGf1teAVFcMfsFr'
+    }
   });
   
 // CRUD Endpoints for Account
@@ -33,7 +35,7 @@ app.post("/accounts", async (req, res) => {
 
      // Send informational email
      const mailOptions = {
-        from: 'musabdevs99@outlook.com',
+        from: 'sender@example.com',
         to: account.email,
         subject: 'Account Created',
         text: 'Your account has been successfully created.',

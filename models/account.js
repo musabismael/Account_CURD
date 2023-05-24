@@ -4,41 +4,47 @@ const { sequelize } = require("../database");
 
 const Account = sequelize.define("Account", {
   first_name: {
-    type: DataTypes.STRING,
-    size: 100,
+    type: DataTypes.STRING(100),
     allowNull: false,
+    comment: 'User first name',
+
   },
   last_name: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(100),
     allowNull: false,
-    size: 100,
+    comment: 'User last name',
+
   },
   email: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(100),
     allowNull: false,
     unique: true,
-    size: 100,
+    comment: 'User account email',
 
     validate: {
       isEmail: true,
     },
   },
   phone: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(16),
     allowNull: false,
-    size: 16,
+    comment: 'User phone number',
+
     validate: {
       isNumeric: true,
     },
   },
   password: {
-    type: DataTypes.STRING,
-    size: 50,
+    type: DataTypes.STRING(50),
+    comment: 'Account password',
+
     allowNull: false,
   },
   birthday: {
     type: DataTypes.DATEONLY,
     allowNull: false,
+    comment: 'User birth date',
+
     validate: {
       isDate: true,
       isFormattedDate(value) {
@@ -50,8 +56,9 @@ const Account = sequelize.define("Account", {
   },
   created_at: {
     type: DataTypes.DATE,
-    Format: "yyyy-mm-dd hh:mm:ss",
     allowNull: false,
+    comment: 'Account creation date',
+
     defaultValue: DataTypes.NOW,
     get() {
       return this.getDataValue("created_at")
@@ -62,20 +69,24 @@ const Account = sequelize.define("Account", {
   },
   last_modified: {
     type: DataTypes.DATE,
-    Format: "yyyy-mm-dd hh:mm:ss",
+    comment: 'Last account update date',
+
     allowNull: false,
     defaultValue: DataTypes.NOW,
     get() {
-      return this.getDataValue('created_at').toISOString().replace(/T/, ' ').replace(/\..+/, '');
+      return this.getDataValue("created_at")
+        .toISOString()
+        .replace(/T/, " ")
+        .replace(/\..+/, "");
     },
   },
 });
 Account.sync()
   .then(() => {
-    console.log('Accounts table created successfully.');
+    console.log("Accounts table created successfully.");
   })
   .catch((error) => {
-    console.error('Error creating Accounts table:', error);
+    console.error("Error creating Accounts table:", error);
   });
 // Hash the password before saving
 Account.beforeCreate(async (account) => {
