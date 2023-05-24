@@ -3,8 +3,8 @@ const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const { sequelize, testDatabaseConnection } = require("./database");
 const Account = require("./models/account");
-const nodemailer = require('nodemailer');
-const bcrypt = require('bcrypt');
+const nodemailer = require("nodemailer");
+const bcrypt = require("bcrypt");
 
 const app = express();
 const port = 3000; // Change the port if desired
@@ -14,17 +14,16 @@ app.use(bodyParser.json());
 // Test the database connection
 testDatabaseConnection();
 
-
 const transporter = nodemailer.createTransport({
-    // Add your email service provider configuration here
-    host: 'smtp.ethereal.email',
-    port: 587,
-    auth: {
-        user: 'lorenza8@ethereal.email',
-        pass: 'H99KGf1teAVFcMfsFr'
-    }
-  });
-  
+  // Add your email service provider configuration here
+  host: "smtp.ethereal.email",
+  port: 587,
+  auth: {
+    user: "lorenza8@ethereal.email",
+    pass: "H99KGf1teAVFcMfsFr",
+  },
+});
+
 // CRUD Endpoints for Account
 // Create Account
 app.post("/accounts", async (req, res) => {
@@ -33,23 +32,23 @@ app.post("/accounts", async (req, res) => {
 
     res.status(201).json(account);
 
-     // Send informational email
-     const mailOptions = {
-        from: 'sender@example.com',
-        to: account.email,
-        subject: 'Account Created',
-        text: 'Your account has been successfully created.',
-      };
+    // Send informational email
+    const mailOptions = {
+      from: "sender@example.com",
+      to: account.email,
+      subject: "Account Created",
+      text: "Your account has been successfully created.",
+    };
 
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.log('Error sending email:', error);
-        } else {
-          console.log('Email sent:', info.response);
-        }
-      });
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Error sending email:", error);
+      } else {
+        console.log("Email sent:", info.response);
+      }
+    });
   } catch (error) {
-    console.log(error.message );
+    console.log(error.message);
 
     res.status(400).json({ error: error.message });
   }
