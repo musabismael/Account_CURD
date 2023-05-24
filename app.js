@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const { sequelize, testDatabaseConnection } = require("./database");
 const Account = require("./models/account");
+const nodemailer = require('nodemailer');
 
 const app = express();
 const port = 3000; // Change the port if desired
@@ -12,14 +13,39 @@ app.use(bodyParser.json());
 // Test the database connection
 testDatabaseConnection();
 
+
+const transporter = nodemailer.createTransport({
+    // Add your email service provider configuration here
+    service: 'hotmail',
+    auth: {
+      user: 'musabdevs99@outlook.com',
+      pass: 'musabdevs@1994',
+    },
+  });
+  
 // CRUD Endpoints for Account
 // Create Account
 app.post("/accounts", async (req, res) => {
   try {
     const account = await Account.create(req.body);
-    console.log('done' );
 
     res.status(201).json(account);
+
+     // Send informational email
+     const mailOptions = {
+        from: 'musabdevs99@outlook.com',
+        to: account.email,
+        subject: 'Account Created',
+        text: 'Your account has been successfully created.',
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log('Error sending email:', error);
+        } else {
+          console.log('Email sent:', info.response);
+        }
+      });
   } catch (error) {
     console.log(error.message );
 
